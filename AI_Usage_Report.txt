@@ -1,0 +1,39 @@
+AI Tools Used
+
+Primary tools:
+ChatGPT (for React components, code snippets, UI decisions)
+GitHub Copilot (inline code suggestions)
+Bolt (Initial website design)
+
+
+Key use cases:
+Generated base layout for Next.js pages and components
+Built reusable UI elements using Tailwind CSS
+Optimized prompts for variations of dashboard card styles
+
+
+Debugging edge cases in dynamic imports and image optimization
+💬 Sample Prompts
+"Build a modern, visually stunning analytics dashboard for "ADmyBRAND Insights" - a fictional analytics platform for digital marketing agencies. Keep it simple with both dark and light mode features. Use proper modern SaaS based coloring and typography for the design.”
+"Generate more sample data according to the given data - data passed.”
+“Help me implement smooth scroll animation between sections in a single-page layout using Framer Motion.”
+
+
+
+⚖️ AI vs Manual Work Split
+AI-generated (≈ 60%)
+Initial UI layout boilerplate (cards, charts, header/sidebar structure)
+Tailwind CSS utility-first class suggestions
+Prompted generation of variants for components like metric cards and tables
+
+
+Manual coding (≈ 40%)
+Final integration with sample data and state management
+Customizing dynamic imports, handling responsive breakpoints
+
+
+Customization:
+Tailored AI-generated code to match spacing system (8px grid)
+Rewrote styling for consistent design system
+Refactored repetitive code and added performance optimizations (lazy loading, image handling)
+
