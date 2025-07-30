@@ -6,12 +6,10 @@ import { Separator } from "@/components/ui/separator";
 import { 
   Moon, 
   Sun, 
-  Bell, 
-  Settings, 
-  RefreshCw,
-  Calendar,
-  Download,
-  BarChart3
+  RefreshCw, 
+  Calendar, 
+  Download, 
+  BarChart3 
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
@@ -19,9 +17,10 @@ import { useState, useEffect } from "react";
 interface DashboardHeaderProps {
   onRefresh?: () => void;
   lastUpdated?: Date;
+  exportData?: Record<string, any>[]; // Accept exportable data
 }
 
-export function DashboardHeader({ onRefresh, lastUpdated }: DashboardHeaderProps) {
+export function DashboardHeader({ onRefresh, lastUpdated, exportData = [] }: DashboardHeaderProps) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -32,14 +31,32 @@ export function DashboardHeader({ onRefresh, lastUpdated }: DashboardHeaderProps
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate refresh
+    await new Promise(resolve => setTimeout(resolve, 1000));
     onRefresh?.();
     setIsRefreshing(false);
   };
 
-  if (!mounted) {
-    return null;
-  }
+  const handleExport = () => {
+    if (!exportData.length) return;
+
+    const csvHeaders = Object.keys(exportData[0]);
+    const csvRows = exportData.map(row =>
+      csvHeaders.map(field => JSON.stringify(row[field] ?? "")).join(",")
+    );
+    const csvContent = [csvHeaders.join(","), ...csvRows].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "export.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  if (!mounted) return null;
 
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6">
@@ -53,7 +70,7 @@ export function DashboardHeader({ onRefresh, lastUpdated }: DashboardHeaderProps
               ADmyBRAND Insights
             </h1>
             <p className="text-muted-foreground">
-              Advanced analytics for digital marketing agencies
+              Analytics for digital marketing agencies
             </p>
           </div>
         </div>
@@ -69,7 +86,7 @@ export function DashboardHeader({ onRefresh, lastUpdated }: DashboardHeaderProps
           Last updated: {lastUpdated?.toLocaleTimeString() || 'Never'}
         </div>
         <Separator orientation="vertical" className="hidden md:block h-6" />
-        
+
         <Button
           variant="outline"
           size="sm"
@@ -81,17 +98,15 @@ export function DashboardHeader({ onRefresh, lastUpdated }: DashboardHeaderProps
           Refresh
         </Button>
 
-        <Button variant="outline" size="sm" className="gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-2"
+          onClick={handleExport}
+          disabled={!exportData.length}
+        >
           <Download className="h-4 w-4" />
           Export
-        </Button>
-
-        <Button variant="outline" size="sm">
-          <Bell className="h-4 w-4" />
-        </Button>
-
-        <Button variant="outline" size="sm">
-          <Settings className="h-4 w-4" />
         </Button>
 
         <Button
@@ -99,11 +114,7 @@ export function DashboardHeader({ onRefresh, lastUpdated }: DashboardHeaderProps
           size="sm"
           onClick={() => setTheme(theme === "light" ? "dark" : "light")}
         >
-          {theme === "light" ? (
-            <Moon className="h-4 w-4" />
-          ) : (
-            <Sun className="h-4 w-4" />
-          )}
+          {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
         </Button>
       </div>
     </div>

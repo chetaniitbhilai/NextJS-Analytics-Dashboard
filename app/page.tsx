@@ -61,7 +61,11 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <DashboardHeader onRefresh={handleRefresh} lastUpdated={lastUpdated} />
+        <DashboardHeader 
+          onRefresh={handleRefresh} 
+          lastUpdated={lastUpdated} 
+          exportData={tableData} // 👈 Pass the table data here
+        />
         
         {/* Metrics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
